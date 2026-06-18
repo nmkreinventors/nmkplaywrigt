@@ -1,0 +1,23 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    implementation "com.microsoft.playwright:playwright:${playwrigtVersion}"
+    implementation "com.aventstack:extentreports:${extentreportsVersion}"
+    implementation "org.slf4j:slf4j-api:${slf4jVersion}"
+    implementation "org.testng:testng:${testngVersion}"
+
+}
+
+test {
+    useJUnitPlatform()
+}
