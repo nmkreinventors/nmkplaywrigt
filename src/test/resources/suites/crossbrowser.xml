@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+
+<!--
+    Cross-browser suite — each <test> block runs the same classes under a different browser.
+    The 'browser' parameter is passed into @BeforeMethod via @Parameters.
+
+    Run: mvn test -Pcrossbrowser
+         mvn test -Pcrossbrowser -Dheadless=true
+
+    To add/remove browsers: clone or delete <test> blocks below.
+    To run only specific browsers at runtime, use -Dcrossbrowser=chrome,firefox
+    (the CrossBrowserSuiteTransformer picks that up — see CrossBrowserFactory).
+
+    thread-count controls how many browsers run simultaneously.
+    With thread-count=3 and 3 browsers, all run in parallel.
+-->
+<suite name="Amazon Cross Browser Suite" verbose="1"
+       parallel="tests"
+       thread-count="3">
+
+    <!-- ==================== CHROME ==================== -->
+    <test name="Chrome Tests" preserve-order="false">
+        <parameter name="browser" value="chrome"/>
+        <classes>
+            <class name="tests.amazon.AmazonSearchTest"/>
+        </classes>
+    </test>
+
+    <!-- ==================== EDGE ==================== -->
+    <test name="Edge Tests" preserve-order="false">
+        <parameter name="browser" value="msedge"/>
+        <classes>
+            <class name="tests.amazon.AmazonSearchTest"/>
+        </classes>
+    </test>
+
+
+</suite>

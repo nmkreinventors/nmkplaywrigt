@@ -18,6 +18,60 @@ dependencies {
 
 }
 
+// ── Suite selection ────────────────────────────────────────────────────────
+// Default: testng.xml   Override: gradle test -Psuite=crossbrowser
+def selectedSuite = project.findProperty('suite') ?: 'testng'
+
+// ── Source encoding ────────────────────────────────────────────────────────
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+// ── System property keys to forward into test JVM (-D flags) ──────────────
+def TEST_SYS_PROPS = [
+        'browser', 'crossbrowser', 'parallelInstances',
+        'headless', 'env', 'retry.count',
+        'screenshot.mode', 'video.mode', 'trace.mode'
+]
+
+// ── Default 'test' task ────────────────────────────────────────────────────
+// gradle test                      → testng.xml
+// gradle test -Psuite=smoke        → smoke.xml
+// gradle test -Psuite=crossbrowser → crossbrowser.xml
+// gradle test -Dbrowser=firefox -DparallelInstances=5 -Dheadless=true
 test {
-    useJUnitPlatform()
+    useTestNG {
+        suites "src/test/resources/suites/${selectedSuite}.xml"
+        outputDirectory    = file('test-output/testng')
+        useDefaultListeners = false
+    }
+    TEST_SYS_PROPS.each { key ->
+        def val = System.getProperty(key)
+        if (val != null) systemProperty(key, val)
+    }
+    testLogging {
+        events              'passed', 'skipped', 'failed'
+        showStandardStreams = false
+        showExceptions      = true
+        exceptionFormat     = 'full'
+        showCauses          = true
+        showStackTraces     = false
+    }
+    reports.html.outputLocation.set(file('test-output/gradle-html'))
+    reports.junitXml.outputLocation.set(file('test-output/gradle-xml'))
+}
+
+// ── Playwright browser install ─────────────────────────────────────────────
+// Run once before first test:  gradlew installPlaywrightBrowsers
+tasks.register('installPlaywrightBrowsers', JavaExec) {
+    group       = 'playwright'
+    description = 'Download Playwright browser binaries (chromium, firefox, webkit)'
+    classpath   = configurations.runtimeClasspath
+    mainClass   = 'com.microsoft.playwright.CLI'
+    args        = ['install']
+}
+
+// ── Clean also wipes test-output ──────────────────────────────────────────
+clean {
+    delete 'test-output'
 }

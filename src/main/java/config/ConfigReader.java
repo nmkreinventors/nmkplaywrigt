@@ -43,7 +43,7 @@ public class ConfigReader {
 
     public String get(String key, String defaultValue){
         String value = get(key);
-        return (value.isBlank() && value == null) ? defaultValue.trim() : value.trim();
+        return (value == null || value.isBlank()) ? defaultValue.trim() : value.trim();
     }
 
     public String getBrowser(){

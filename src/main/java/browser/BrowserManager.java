@@ -8,6 +8,8 @@ import constants.FrameworkConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.microsoft.playwright.BrowserType.LaunchOptions;
+
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
@@ -100,7 +102,50 @@ public class BrowserManager {
     }
 
     //Tear down steps to clear objects will be created later
+    public static void tearDown(boolean testFailed, String traceName) {
+        try {
+            BrowserContext context = browserContextTL.get();
+            if (context != null) {
+                String traceMode = config.get("trace.mode");
+                boolean saveTrace = FrameworkConstants.MODE_ALWAYS.equals(traceMode) ||
+                        (FrameworkConstants.MODE_ON_FAILURE.equals(traceMode) && testFailed);
+                if (saveTrace) {
+                    Path tracePath = Paths.get(FrameworkConstants.TRACES_DIR, traceName + ".zip");
+                    context.tracing().stop(new Tracing.StopOptions().setPath(tracePath));
+                    LOG.info("Trace saved: {}", tracePath);
+                } else {
+                    context.tracing().stop();
+                }
+                context.close();
+            }
+        } catch (Exception e) {
+            LOG.warn("Error closing BrowserContext: {}", e.getMessage());
+        } finally {
+            browserContextTL.remove();
+        }
 
+        try {
+            Browser browser = browserTL.get();
+            if (browser != null) browser.close();
+        } catch (Exception e) {
+            LOG.warn("Error closing Browser: {}", e.getMessage());
+        } finally {
+            browserTL.remove();
+        }
+
+        try {
+            Playwright pw = playwrightTL.get();
+            if (pw != null) pw.close();
+        } catch (Exception e) {
+            LOG.warn("Error closing Playwright: {}", e.getMessage());
+        } finally {
+            playwrightTL.remove();
+            pageTL.remove();
+            currentBrowserTL.remove();
+        }
+
+        LOG.info("[Thread-{}] Browser resources released.", Thread.currentThread().getId());
+    }
 
 
 

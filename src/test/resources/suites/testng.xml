@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+
+<!--
+    Default suite — all tests, single browser, parallel at method level.
+    Thread count driven by config.properties#parallelInstances.
+
+    Run: mvn test
+         mvn test -Dbrowser=firefox -DparallelInstances=2 -Dheadless=true
+-->
+<suite name="Amazon Automation Suite" verbose="1"
+       parallel="methods"
+       thread-count="3">
+
+    <!-- Default browser — overridden by -Dbrowser=xxx -->
+    <parameter name="browser" value="chrome"/>
+
+    <test name="Amazon Tests" preserve-order="false">
+        <classes>
+            <class name="tests.amazon.AmazonSearchTest"/>
+        </classes>
+    </test>
+
+</suite>

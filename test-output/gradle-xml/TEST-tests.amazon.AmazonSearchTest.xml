@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="tests.amazon.AmazonSearchTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-06-22T22:53:49.473Z" hostname="MOHAN-KUMAR-PUL" time="73.426">
+  <properties/>
+  <testcase name="verifyHomePageLoads" classname="tests.amazon.AmazonSearchTest" time="3.922"/>
+  <testcase name="verifyHomePageLoads" classname="tests.amazon.AmazonSearchTest" time="4.129"/>
+  <testcase name="verifyHomePageSearchFunctionality" classname="tests.amazon.AmazonSearchTest" time="9.957"/>
+  <testcase name="verifyHomePageSearchFunctionality" classname="tests.amazon.AmazonSearchTest" time="10.249"/>
+  <testcase name="verifySeaPageFunctionality" classname="tests.amazon.AmazonSearchTest" time="10.022"/>
+  <testcase name="verifySeaPageFunctionality" classname="tests.amazon.AmazonSearchTest" time="9.736"/>
+  <testcase name="verifySearchHomePageFunctionality" classname="tests.amazon.AmazonSearchTest" time="10.038"/>
+  <testcase name="verifySearchHomePageFunctionality" classname="tests.amazon.AmazonSearchTest" time="9.931"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
