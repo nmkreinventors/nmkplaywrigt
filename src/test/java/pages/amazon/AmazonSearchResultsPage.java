@@ -13,7 +13,7 @@ public class AmazonSearchResultsPage extends BasePage {
     //Locators
     private final Locator productResult = page().getByText(Pattern.compile("^\\d+-\\d+ of .* results for"));
 
-    public String getProductResultText(String productResultText){
+    public String getProductResultText(){
         return getText(productResult);
     }
 

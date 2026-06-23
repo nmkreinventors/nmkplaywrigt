@@ -18,6 +18,13 @@ dependencies {
 
 }
 
+//gradle test -Psuite=
+def selectedSuite = project.findProperty('suite')?: 'testng'
+
 test {
-    useJUnitPlatform()
+    useTestNG(){
+        suites "src/test/resources/suites/${selectedSuite}.xml"
+        outputDirectory = file('test-output/testng')
+        useDefaultListeners = false
+    }
 }

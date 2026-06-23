@@ -100,7 +100,20 @@ public class BrowserManager {
     }
 
     //Tear down steps to clear objects will be created later
+    public static void tearDown(){
+        BrowserContext browserContext = browserContextTL.get();
+        String traceMode = config.get("trace.mode");
+        if(traceMode.equals(FrameworkConstants.MODE_ALWAYS)) {
+            browserContext.tracing().stop(new Tracing.StopOptions().setPath(Paths.get(FrameworkConstants.TRACE_DIR, FrameworkConstants.TRACE_NAME + ".zip")));
+        }
 
+        Playwright pw = playwrightTL.get();
+        pw.close();
+        browserContextTL.remove();
+        browserTL.remove();
+        pageTL.remove();
+        playwrightTL.remove();
+    }
 
 
 

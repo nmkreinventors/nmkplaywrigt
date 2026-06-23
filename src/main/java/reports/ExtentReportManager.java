@@ -19,6 +19,7 @@ public class ExtentReportManager {
     private final Logger log = LoggerFactory.getLogger(ExtentReportManager.class);
     private static ExtentReports extentReports;
     private static final ThreadLocal<ExtentTest> extentTestTL = new ThreadLocal<>();
+    private static String reportFilePath;
 
     public static synchronized void initReports(){
 
@@ -27,8 +28,8 @@ public class ExtentReportManager {
         String reportName = config.get("extent.report.name");
         String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
 
-        String fileName = reportDir + File.separator + reportName+"_"+timestamp+".html";
-        ExtentSparkReporter sparkReporter = new ExtentSparkReporter(fileName);
+        reportFilePath = reportDir + File.separator + reportName+"_"+timestamp+".html";
+        ExtentSparkReporter sparkReporter = new ExtentSparkReporter(reportFilePath);
         sparkReporter.config().setTheme(Theme.STANDARD);
         sparkReporter.config().setDocumentTitle(reportName);
         sparkReporter.config().setReportName(reportName);
@@ -53,6 +54,18 @@ public class ExtentReportManager {
 
     public static void logstep(Status status, String message){
         extentTestTL.get().log(status, message);
+    }
+
+    public static String getReportFilePath() {
+        return reportFilePath;
+    }
+
+    public static void removeTest(){
+        extentTestTL.remove();
+    }
+
+    public static ExtentTest getTest(){
+        return extentTestTL.get();
     }
 
 
